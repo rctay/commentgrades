@@ -9,6 +9,12 @@ Treetop.load(File.join(base_path, 'commentgrades.tt'))
 
 class CommentGradesParser
   attr_reader :result
+  attr_reader :components
+
+  def initialize
+    super
+    @components = {}
+  end
 
   def parse_file(filename)
     open(filename, 'r') do |f|
@@ -18,6 +24,10 @@ class CommentGradesParser
 
   def parse(*args)
     @result = super(*args)
+  end
+
+  def <<(component)
+    @components.merge!(component)
   end
 
   def walk_component_grades
