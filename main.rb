@@ -1,12 +1,11 @@
 base_path = File.expand_path(File.dirname(__FILE__))
 
-require File.join(base_path, 'parser.rb')
+require File.join(base_path, 'grader.rb')
 
 filename = ARGV[0]
-parser = CommentGradesParser.new
-parser << { :style => 5 }
-parser << { :design => 5 }
-parser << { :correctness => 20 }
-p parser.components
-parser.parse_file(filename)
-parser.walk_component_grades
+grader = Grader.new
+grader << [:style, 5, {:is_negative => true}]
+grader << [:design, 5, {:is_negative => true}]
+grader << [:correctness, 20]
+grader.parse_file(filename)
+p grader
