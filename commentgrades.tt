@@ -1,27 +1,48 @@
 grammar CommentGrades
   rule main
-    commentedgrade / rest
+    ( commentedgrade / rest )*
   end
 
   rule rest
-    .*
+    . / "\n"
   end
 
   rule commentedgrade
-    '/*'
-      'M:'
-      .*
-      component grade
+    commentedgradeprefix space*
+    (
+      componentgrade / commentbody
+    )*
     '*/'
   end
 
+  rule commentbody
+    !'*/' (. / "\n")
+  end
+
+  rule commentedgradeprefix
+    '/*' space* 'M:'
+  end
+
+  rule componentgrade
+    component space* grade <ComponentGrade>
+  end
+
   rule component
-    'style' /
-    'design' /
-    'correctness'
+    'style' <Component> /
+    'design' <Component> /
+    'correctness' <Component>
   end
 
   rule grade
-    '-'? [0-9]+ ( '.' [0-9]+ )?
+    numeric ( '/' space* numeric )? <Grade>
+  end
+
+  rule numeric
+    # allow decimal
+    '-'? [0-9]+ ( '.' [0-9]+ )? <Numeric>
+  end
+
+  rule space
+    [\s]
   end
 end
