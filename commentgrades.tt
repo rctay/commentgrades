@@ -30,7 +30,8 @@ grammar CommentGrades
   rule component
     component_style /
     component_design /
-    component_correctness
+    component_correctness /
+    component_final
   end
 
   rule component_style
@@ -43,6 +44,10 @@ grammar CommentGrades
 
   rule component_correctness
     'correctness' <Component>
+  end
+
+  rule component_final
+    'final' <Component>
   end
 
   rule grade

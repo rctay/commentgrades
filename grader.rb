@@ -40,6 +40,7 @@ end
 
 class Grade
   attr_reader :name, :max, :is_negative
+  attr_reader :r_val
 
   def initialize(name, max, opts={})
     @name = name.to_s
@@ -90,6 +91,7 @@ class Grader
 
   def initialize
     @parser = CommentGradesParser.new
+    @final_grade = Grade.new(:final, 0)
     @components = {}
   end
 
@@ -106,7 +108,10 @@ class Grader
   end
 
   def collect_grades
+    @components[:final] = @final_grade
     @parser.walk_component_grades(@components)
+    @components.delete :final
+    nil
   end
 
   def each(&block)
@@ -120,6 +125,11 @@ class Grader
       result << grade.inspect
       final_n += grade.val
       final_d += grade.max
+    end
+    val = @final_grade.r_val
+    if val != 0
+      final_n += val
+      result << "final #{val}"
     end
     result << "final: #{final_n}/#{final_d}"
     result.join "\n"
