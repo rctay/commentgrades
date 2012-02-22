@@ -115,9 +115,13 @@ class Grader
 
   def inspect
     result = []
+    final_n = final_d = 0
     each do |component, grade|
       result << grade.inspect
+      final_n += grade.val
+      final_d += grade.max
     end
+    result << "final: #{final_n}/#{final_d}"
     result.join "\n"
   end
 end
