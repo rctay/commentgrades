@@ -52,6 +52,7 @@ class Grade
     # running value and maximum
     @r_val = 0
     @r_max = 0
+    @val = nil
   end
 
   def consume(node)
@@ -64,6 +65,7 @@ class Grade
   end
 
   def val
+    return @val if not @val.nil?
     val = 0
     if @is_negative
       val = @max + @r_val
@@ -74,7 +76,8 @@ class Grade
         if @max != @r_max
       val = @r_val
     end
-    return val
+    @val = val
+    return @val
   end
 
   def inspect
