@@ -10,6 +10,12 @@ Treetop.load(File.join(base_path, 'commentgrades.tt'))
 class CommentGradesParser
   attr_reader :result
 
+  def parse_file(filename)
+    open(filename, 'r') do |f|
+      parse(f.read)
+    end
+  end
+
   def parse(*args)
     @result = super(*args)
   end
