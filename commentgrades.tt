@@ -28,8 +28,20 @@ grammar CommentGrades
   end
 
   rule component
-    'style' <Component> /
-    'design' <Component> /
+    component_style /
+    component_design /
+    component_correctness
+  end
+
+  rule component_style
+    'style' <Component>
+  end
+
+  rule component_design
+    'design' <Component>
+  end
+
+  rule component_correctness
     'correctness' <Component>
   end
 
