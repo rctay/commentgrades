@@ -99,6 +99,10 @@ class Grader
     open(filename, 'r') do |f|
       @parser.parse(f.read)
     end
+
+    @components.each_value {|grade| grade.reset }
+    @final_grade.reset
+
     collect_grades
   end
 
