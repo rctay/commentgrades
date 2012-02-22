@@ -24,7 +24,8 @@ grammar CommentGrades
   end
 
   rule componentgrade
-    component space* grade <ComponentGrade>
+    ( component space* grade <ComponentGrade> ) /
+    ( grade space* componentgrade_joiner space* component <ComponentGrade> )
   end
 
   rule component
@@ -48,6 +49,10 @@ grammar CommentGrades
 
   rule component_final
     'final' <Component>
+  end
+
+  rule componentgrade_joiner
+    'for' / 'in'
   end
 
   rule grade
