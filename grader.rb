@@ -5,7 +5,7 @@ base_path = File.expand_path(File.dirname(__FILE__))
 
 require File.join(base_path, 'nodes.rb')
 
-Treetop.load(File.join(base_path, 'commentgrades.tt'))
+Treetop.load(File.join(base_path, 'commentgrades'))
 
 # Extend generated parser
 class CommentGradesParser
