@@ -45,7 +45,6 @@ module CommentGrades
 
     def denominator
       return nil if elements.nil?
-      return nil unless elements.size >= 2
       candidate = elements[1]
       return nil if candidate.nil?
       candidate = candidate.elements
