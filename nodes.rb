@@ -1,17 +1,28 @@
 module CommentGrades
-  class ComponentGrade < Treetop::Runtime::SyntaxNode
-    def component
+  module Helpers
+    def elements_is_a?(kls)
       return nil if elements.nil?
       return elements.select {|node|
-        node.is_a? Component
-      }.first
+        node.is_a? kls
+      }
+    end
+
+    def first_is_a?(kls)
+      all = elements_is_a?(kls)
+      return nil if all.nil?
+      return all.first
+    end
+  end
+
+  class ComponentGrade < Treetop::Runtime::SyntaxNode
+    include Helpers
+
+    def component
+      return first_is_a? Component
     end
 
     def grade
-      return nil if elements.nil?
-      return elements.select {|node|
-        node.is_a? Grade
-      }.first
+      return first_is_a? Grade
     end
 
     def inspect
@@ -26,11 +37,10 @@ module CommentGrades
   end
 
   class Grade < Treetop::Runtime::SyntaxNode
+    include Helpers
+
     def numerator
-      return nil if elements.nil?
-      candidate = elements.first
-      return nil unless candidate.is_a? Numeric
-      return candidate
+      return first_is_a? Numeric
     end
 
     def denominator
