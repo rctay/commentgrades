@@ -1,14 +1,15 @@
 module CommentGrades
   module Helpers
-    def elements_is_a?(kls)
-      return nil if elements.nil?
-      return elements.select {|node|
+    def elements_is_a?(kls, nodes=nil)
+      nodes ||= elements
+      return nil if nodes.nil?
+      return nodes.select {|node|
         node.is_a? kls
       }
     end
 
-    def first_is_a?(kls)
-      all = elements_is_a?(kls)
+    def first_is_a?(kls, nodes=nil)
+      all = elements_is_a?(kls, nodes)
       return nil if all.nil?
       return all.first
     end
@@ -46,14 +47,7 @@ module CommentGrades
     def denominator
       return nil if elements.nil?
       candidate = elements[1]
-      return nil if candidate.nil?
-      candidate = candidate.elements
-      return nil if candidate.nil?
-      candidate = candidate.select {|node|
-        node.is_a? Numeric
-      }.first
-      return nil if candidate.nil?
-      return candidate
+      return first_is_a? Numeric, candidate.elements
     end
 
     def inspect
