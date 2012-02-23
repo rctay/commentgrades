@@ -1,6 +1,4 @@
-base_path = File.expand_path(File.dirname(__FILE__))
-
-require File.join(base_path, 'grader.rb')
+require 'grader'
 
 filename = ARGV[0]
 grader = Grader.new
