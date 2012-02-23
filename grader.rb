@@ -73,9 +73,12 @@ class Grade
       raise Exception, "Overdeducted for #{@name}" \
         if val < 0
     else
-      raise Exception, "Mismatch for #{@name}: #{@max} != #{@r_max}" \
-        if @max != @r_max
       val = @r_val
+      if @max != @r_max
+        cmp = @r_max < @max ? "is below" : "exceeds"
+        raise Exception, "Mismatch for #{@name}: " \
+          "#{@r_max} #{cmp} #{@max}"
+      end
     end
     @val = val
     return @val
