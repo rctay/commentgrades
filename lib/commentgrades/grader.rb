@@ -82,12 +82,35 @@ module CommentGrades
 
     # provides a convenient "main()" - parses and prints grades
     def main(args=ARGV)
-      args.each do |arg|
+      require 'optparse'
+
+      # additional formats
+      require 'commentgrades/render/csv'
+
+      OptionParser.new do |o|
+        formats = {
+          'default' => CommentGrades::Render::Default,
+          'csv' => CommentGrades::Render::CSV,
+        }
+        o.on('-f', '--format FORMAT',
+          "Supported: #{formats.keys.join(", ")}") { |format|
+          next if format == 'default'
+          kls = formats[format]
+          raise Exception, "Unknown format #{format}" \
+            if kls.nil?
+          @renderer = kls.new
+        }
+        o.parse!(args)
+      end
+      last = args.length - 1
+      args.each_with_index do |arg, index|
         opts = yield arg
         filename = opts.delete :filename
         @ctxt = opts
+        @ctxt[:first] = {} if index == 0
+        @ctxt[:last] = {} if index == last
         parse_file(filename)
-        p self
+        print self.render
       end
     end
   end
