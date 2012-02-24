@@ -46,5 +46,13 @@ module CommentGrades
       require 'commentgrades/render/default'
       render(Render::Default)
     end
+
+    # provides a convenient "main()" - parses and prints grades
+    def main(files)
+      files.each do |filename|
+        parse_file(filename)
+        p self
+      end
+    end
   end
 end
