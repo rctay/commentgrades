@@ -2,13 +2,14 @@ require 'rubygems'
 require 'treetop'
 
 base_path = File.expand_path(File.dirname(__FILE__))
+base_path = File.join(base_path, 'lib', 'commentgrades')
 
 require File.join(base_path, 'nodes.rb')
 
-Treetop.load(File.join(base_path, 'commentgrades'))
+Treetop.load(File.join(base_path, 'c_source'))
 
 # Extend generated parser
-class CommentGradesParser
+module CommentGradesParser
   attr_reader :result
 
   def parse(*args)
@@ -37,6 +38,11 @@ private
   end
 end
 
+module CommentGrades
+  class CSourceParser
+    include CommentGradesParser
+  end
+end
 
 class Grade
   attr_reader :name, :max, :is_negative
@@ -93,7 +99,7 @@ class Grader
   attr_reader :components
 
   def initialize
-    @parser = CommentGradesParser.new
+    @parser = CommentGrades::CSourceParser.new
     @final_grade = Grade.new(:final, 0)
     @components = {}
   end

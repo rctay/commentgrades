@@ -1,0 +1,76 @@
+module CommentGrades
+  grammar CSource
+    rule main
+      ( commentedgrade / rest )*
+    end
+
+    rule rest
+      . / "\n"
+    end
+
+    rule commentedgrade
+      commentedgradeprefix space*
+      (
+        componentgrade / commentbody
+      )*
+      '*/'
+    end
+
+    rule commentbody
+      !'*/' (. / "\n")
+    end
+
+    rule commentedgradeprefix
+      '/*' space* 'M:'
+    end
+
+    rule componentgrade
+      ( component space* componentgrade_joiner? space* grade <ComponentGrade> ) /
+      ( grade space* gradecomponent_joiner space* component <ComponentGrade> )
+    end
+
+    rule component
+      component_style /
+      component_design /
+      component_correctness /
+      component_final
+    end
+
+    rule component_style
+      'style' <Component>
+    end
+
+    rule component_design
+      'design' <Component>
+    end
+
+    rule component_correctness
+      'correctness' <Component>
+    end
+
+    rule component_final
+      'final' <Component>
+    end
+
+    rule componentgrade_joiner
+      ':' / '='
+    end
+
+    rule gradecomponent_joiner
+      'for' / 'in'
+    end
+
+    rule grade
+      numeric ( '/' space* numeric )? <Grade>
+    end
+
+    rule numeric
+      # allow decimal
+      '-'? [0-9]+ ( '.' [0-9]+ )? <Numeric>
+    end
+
+    rule space
+      [\s]
+    end
+  end
+end
