@@ -38,21 +38,13 @@ module CommentGrades
       (@components || {}).each(&block)
     end
 
+    def render(kls)
+      kls.render(self, @final_grade)
+    end
+
     def inspect
-      result = []
-      final_n = final_d = 0
-      each do |component, grade|
-        result << grade.inspect
-        final_n += grade.val
-        final_d += grade.max
-      end
-      val = @final_grade.r_val
-      if val != 0
-        final_n += val
-        result << "final #{val}"
-      end
-      result << "final: #{final_n}/#{final_d}"
-      result.join "\n"
+      require 'commentgrades/render/default'
+      render(Render::Default)
     end
   end
 end
