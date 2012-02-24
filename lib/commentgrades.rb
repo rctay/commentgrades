@@ -1,0 +1,1 @@
+require 'commentgrades/parser'

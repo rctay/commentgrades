@@ -1,48 +1,4 @@
-require 'rubygems'
-require 'treetop'
-
-base_path = File.expand_path(File.dirname(__FILE__))
-base_path = File.join(base_path, 'lib', 'commentgrades')
-
-require File.join(base_path, 'nodes.rb')
-
-Treetop.load(File.join(base_path, 'c_source'))
-
-# Extend generated parser
-module CommentGradesParser
-  attr_reader :result
-
-  def parse(*args)
-    @result = super(*args)
-  end
-
-  def walk_component_grades(grades)
-    return if @result.nil?
-    do_walk_component_grades(@result, grades)
-  end
-
-private
-  def do_walk_component_grades(node, grades)
-    if node.is_a? CommentGrades::ComponentGrade
-      grade = grades[node.component.text_value.to_sym]
-      raise Exception, "Unknown component #{node.component}" \
-        if grade.nil?
-      grade.consume(node.grade)
-      # no nested component grades, so don't traverse children
-      return
-    end
-    return if node.elements.nil?
-    node.elements.each {|node|
-      do_walk_component_grades(node, grades)
-    }
-  end
-end
-
-module CommentGrades
-  class CSourceParser
-    include CommentGradesParser
-  end
-end
+require 'commentgrades'
 
 class Grade
   attr_reader :name, :max, :is_negative
