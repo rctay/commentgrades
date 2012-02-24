@@ -1,6 +1,6 @@
 module CommentGrades
   class Grade
-    attr_reader :name, :max, :is_negative
+    attr_reader :name, :max
     attr_reader :r_val
 
     def self.make(name, max, opts={})
