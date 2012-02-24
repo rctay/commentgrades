@@ -1,14 +1,18 @@
 require 'commentgrades/parser/parser'
 require 'commentgrades/grades'
+require 'commentgrades/render/default'
 
 module CommentGrades
   class Grader
     attr_reader :components
+    attr_accessor :renderer, :ctxt
 
     def initialize
       @parser = Parser::CSourceParser.new
       @final_grade = Grade.make(:final, 0)
       @components = {}
+      @renderer = Render::Default.new
+      @ctxt = {}
     end
 
     def parse_file(filename)
@@ -38,21 +42,50 @@ module CommentGrades
       (@components || {}).each(&block)
     end
 
-    def render(kls)
-      kls.render(self, @final_grade)
+    def render(rndr=nil)
+      rndr ||= @renderer
+      rndr.render(rndr.template, build_context)
     end
 
     def inspect
-      require 'commentgrades/render/default'
-      render(Render::Default)
+      render
+    end
+
+    def build_context()
+      ctxt = {}
+      components = []
+      final_n = final_d = 0
+      each do |component, grade|
+        components << {
+          :name => component,
+          :grade => grade.val,
+          :outof => grade.max,
+        }
+        final_n += grade.val
+        final_d += grade.max
+      end
+      ctxt[:components] = components
+
+      val = @final_grade.r_val
+      if val != 0
+        final_n += val
+        ctxt[:final_adjustment] = {
+          :adjustment => @final_grade.r_val
+        }
+      end
+
+      ctxt[:grade] = final_n
+      ctxt[:outof] = final_d
+      ctxt.merge! @ctxt
+      return ctxt
     end
 
     # provides a convenient "main()" - parses and prints grades
-    def main(files, opts={})
-      files.each do |filename|
-        if opts.has_key? :filename_fmt
-          filename = sprintf(opts[:filename_fmt], filename)
-        end
+    def main(args)
+      args.each do |arg|
+        opts = yield arg
+        filename = opts.delete :filename
+        @ctxt = opts
         parse_file(filename)
         p self
       end
