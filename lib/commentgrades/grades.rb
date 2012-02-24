@@ -3,10 +3,17 @@ module CommentGrades
     attr_reader :name, :max, :is_negative
     attr_reader :r_val
 
-    def initialize(name, max, opts={})
+    def self.make(name, max, opts={})
+      kls = Grade
+      if opts[:is_negative]
+        kls = NegativeGrade
+      end
+      return kls.new(name, max)
+    end
+
+    def initialize(name, max)
       @name = name.to_s
       @max = max
-      @is_negative = opts[:is_negative] || false
       reset
     end
 
@@ -28,25 +35,33 @@ module CommentGrades
 
     def val
       return @val if not @val.nil?
-      val = 0
-      if @is_negative
-        val = @max + @r_val
-        raise Exception, "Overdeducted for #{@name}" \
-          if val < 0
-      else
-        val = @r_val
-        if @max != @r_max
-          cmp = @r_max < @max ? "is below" : "exceeds"
-          raise Exception, "Mismatch for #{@name}: " \
-            "#{@r_max} #{cmp} #{@max}"
-        end
-      end
-      @val = val
+      @val = _val()
       return @val
     end
 
     def inspect
       "#{@name}: #{val}/#{@max}"
+    end
+  
+  protected
+    def _val
+      val = @r_val
+      return val if @max == @r_max
+      # from here, we prepare the error
+      cmp = @r_max < @max ? "is below" : "exceeds"
+      raise Exception, "Mismatch for #{@name}: " \
+        "#{@r_max} #{cmp} #{@max}"
+    end
+  end
+
+  # For negative marking
+  class NegativeGrade < Grade
+  protected
+    def _val
+      val = @max + @r_val
+      raise Exception, "Overdeducted for #{@name}" \
+        if val < 0
+      return val
     end
   end
 end

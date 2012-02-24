@@ -7,7 +7,7 @@ module CommentGrades
 
     def initialize
       @parser = Parser::CSourceParser.new
-      @final_grade = Grade.new(:final, 0)
+      @final_grade = Grade.make(:final, 0)
       @components = {}
     end
 
@@ -24,7 +24,7 @@ module CommentGrades
 
     def <<(grade_args)
       name, _ = grade_args
-      @components[name] = Grade.new(*grade_args)
+      @components[name] = Grade.make(*grade_args)
     end
 
     def collect_grades
