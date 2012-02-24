@@ -12,6 +12,7 @@ module CommentGrades
 final {{adjustment}}
 {{/final_adjustment}}
 final: {{grade}}/{{outof}}
+
 """
     end
   end
