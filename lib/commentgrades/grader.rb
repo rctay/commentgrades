@@ -48,8 +48,11 @@ module CommentGrades
     end
 
     # provides a convenient "main()" - parses and prints grades
-    def main(files)
+    def main(files, opts={})
       files.each do |filename|
+        if opts.has_key? :filename_fmt
+          filename = sprintf(opts[:filename_fmt], filename)
+        end
         parse_file(filename)
         p self
       end
