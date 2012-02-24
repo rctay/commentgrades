@@ -1,1 +1,2 @@
-require 'commentgrades/parser'
+require 'commentgrades/parser/parser'
+require 'commentgrades/grades'
