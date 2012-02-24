@@ -81,7 +81,7 @@ module CommentGrades
     end
 
     # provides a convenient "main()" - parses and prints grades
-    def main(args)
+    def main(args=ARGV)
       args.each do |arg|
         opts = yield arg
         filename = opts.delete :filename
