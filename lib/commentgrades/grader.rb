@@ -15,15 +15,18 @@ module CommentGrades
       @ctxt = {}
     end
 
-    def parse_file(filename)
-      open(filename, 'r') do |f|
-        @parser.parse(f.read)
-      end
-
+    def parse(text)
+      @parser.parse(text)
       @components.each_value {|grade| grade.reset }
       @final_grade.reset
 
       collect_grades
+    end
+
+    def parse_file(filename)
+      open(filename, 'r') do |f|
+        parse(f.read)
+      end
     end
 
     def <<(grade_args)
