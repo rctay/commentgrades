@@ -1,18 +1,10 @@
 module CommentGrades
   module Parser
     module Helpers
-      def elements_is_a?(kls, nodes=nil)
+      def first_is_a?(kls, nodes=nil)
         nodes ||= elements
         return nil if nodes.nil?
-        return nodes.select {|node|
-          node.is_a? kls
-        }
-      end
-
-      def first_is_a?(kls, nodes=nil)
-        all = elements_is_a?(kls, nodes)
-        return nil if all.nil?
-        return all.first
+        nodes.find {|node| node.is_a? kls}
       end
     end
 
