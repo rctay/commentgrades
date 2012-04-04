@@ -31,10 +31,16 @@ module CommentGrades
     end
 
     class Grade < Treetop::Runtime::SyntaxNode
+    end
+
+    class FullGrade < Grade
+    end
+
+    class NumericGrade < Grade
       include Helpers
 
       def numerator
-        return first_is_a? Numeric
+        first_is_a? Numeric
       end
 
       def denominator

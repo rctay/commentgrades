@@ -25,12 +25,17 @@ module CommentGrades
     end
 
     def consume(node)
-      n = node.numerator
-      return if n.nil?
-      @r_val += n.to_f
-      n = node.denominator
-      return if n.nil?
-      @r_max += n.to_f
+      case node
+      when Parser::NumericGrade
+        n = node.numerator
+        return if n.nil?
+        @r_val += n.to_f
+        n = node.denominator
+        return if n.nil?
+        @r_max += n.to_f
+      when Parser::FullGrade
+        @r_val = @r_max = @max
+      end
     end
 
     def val

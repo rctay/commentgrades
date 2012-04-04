@@ -27,7 +27,8 @@ module CommentGrades
 
       rule componentgrade
         ( component space* componentgrade_joiner? space* grade <ComponentGrade> ) /
-        ( grade space* gradecomponent_joiner space* component <ComponentGrade> )
+        ( grade_numeric space* gradecomponent_joiner  space* component <ComponentGrade> ) /
+        ( grade_full    space* gradecomponent_joiner? space* component <ComponentGrade> )
       end
 
       rule component
@@ -62,7 +63,15 @@ module CommentGrades
       end
 
       rule grade
-        numeric ( '/' space* numeric )? <Grade>
+        grade_numeric / grade_full
+      end
+
+      rule grade_numeric
+        numeric ( '/' space* numeric )? <NumericGrade>
+      end
+
+      rule grade_full
+        'full' <FullGrade>
       end
 
       rule numeric
